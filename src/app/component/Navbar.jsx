@@ -12,12 +12,14 @@ const Navbar = () => {
                 </h1>
 
                 <ul className="flex gap-10 items-center flex-auto justify-center text-gray-900 dark:text-white">
+
                     <li className="text-white dark:text-white">About</li>
+
                     <li className="text-white dark:text-white">Contact</li>
                 </ul>
 
                 <div className="flex items-center justify-between space-x-4 flex-none">
-                    {/* <Login /> */}
+                    <Login />
                     <ThemeToggle />
                 </div>
             </div>

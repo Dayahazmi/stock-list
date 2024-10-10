@@ -1,23 +1,10 @@
-"use client";
 
-import { useState } from 'react';
-import LoginPage from './login/login'; // Adjust the path as necessary
+import Link from "next/link";
 
 const Login = () => {
-    const [showLoginPage, setShowLoginPage] = useState(false);
-
-    const handleLogin = () => {
-        setShowLoginPage(true);
-    };
 
     return (
-        <div>
-            {!showLoginPage ? (
-                <button onClick={handleLogin}>Login</button>
-            ) : (
-                <LoginPage />
-            )}
-        </div>
+        <Link href="/login"><button>Login</button></Link>
     );
 }
 
