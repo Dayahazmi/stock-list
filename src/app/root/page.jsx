@@ -2,10 +2,10 @@
 
 import React, { use, useEffect } from 'react'
 import { useState } from 'react'
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, getAuth } from 'firebase/auth';
 import { auth } from '../firebase/config';
 import { UserAuth } from '../context/AuthContext';
-import Navbar from '../root/component/Navbar'
+import Navbar from './component/navbar';
 
 export const Page = () => {
 
@@ -23,8 +23,7 @@ export const Page = () => {
         return () => unsubscribe();
     }, [])
     const [stockItems, setStockItems] = useState([
-        { id: 1, name: 'Item 1', quantity: 10 },
-        { id: 2, name: 'Item 2', quantity: 20 },
+
     ]);
 
     const [newItem, setNewItem] = useState({ name: '', quantity: '' });
@@ -64,6 +63,30 @@ export const Page = () => {
         setNewItem({ name: "", quantity: "" });
     };
 
+    const saveStock = async (item) => {
+        try {
+            const token = await auth.currentUser.getIdToken(); // Firebase auth token
+            const response = await fetch('/api/stock', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ token, stockData: item }),
+            });
+
+            // Log the response to check if it's actually JSON
+            const text = await response.text();
+            console.log('Response:', text);
+
+            // Parse the response if it's JSON
+            const result = JSON.parse(text);
+            console.log('Parsed Result:', result);
+        } catch (error) {
+            console.error('Error saving stock:', error);
+        }
+    };
+
+
     return (
         <>
             <Navbar />
@@ -77,25 +100,26 @@ export const Page = () => {
 
                 <h1 className='text-5xl text-black font-bold text-center mb-4 mt-15 dark:text-white'>Stock List</h1>
 
+                {/* add new item */}
                 <div className="mt-10 flex justify-center items-center">
                     <input
                         type="text"
                         placeholder="Item Name"
                         value={newItem.name}
                         onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
-                        className="border  bg-white text-black p-2 mr-2 dark:text-white"
+                        className="border bg-white text-black p-2 mr-2 dark:text-black"
                     />
                     <input
                         type="number"
                         placeholder="Quantity"
                         value={newItem.quantity}
                         onChange={(e) => setNewItem({ ...newItem, quantity: e.target.value })}
-                        className="border  bg-white text-black p-2 mr-2 dark:text-white"
+                        className="border bg-white text-black p-2 mr-2 dark:text-black"
                     />
                     {isEditing ? (
                         <button
                             className="bg-green-500 text-white px-4 py-2 rounded"
-                            onClick={saveEdit}
+                            onClick={() => saveStock(newItem)}
                         >
                             Save
                         </button>
@@ -109,6 +133,8 @@ export const Page = () => {
                     )}
                 </div>
 
+
+                {/* display stock items */}
                 <table className='mt-10 table-auto w-full border-collapse border border-gray-400'>
                     <thead>
                         <tr className='bg-gray-200'>
@@ -139,8 +165,15 @@ export const Page = () => {
                             </tr>
                         ))}
                     </tbody>
-
                 </table>
+
+                <div className='mt-10  flex justify-center '>
+                    <button
+                        onClick={() => saveStock(newItem)}
+                        className="bg-blue-500 text-white font-bold text-xl px-2 py-1 rounded mr-2">
+                        Save
+                    </button>
+                </div>
             </div>
 
 

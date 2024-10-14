@@ -10,10 +10,11 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  console.log('RootLayout rendering'); // Add this line
   return (
     <html lang="en">
       <body className="dark:bg-medium">
-        <AuthContextProvider> {/* Wrap the app with AuthContextProvider */}
+        <AuthContextProvider>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <main>{children}</main>
           </ThemeProvider>
@@ -22,3 +23,4 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+

@@ -13,6 +13,7 @@ const SignIn = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);
+    const [currentUser, setUser] = useState(null);
     const router = useRouter();
 
     const handleLogin = async () => {
